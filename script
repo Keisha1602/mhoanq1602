@@ -1,39 +1,40 @@
 --// Keisha Hub | Steal a Brainrot
---// by you 💖
+--// Fixed UI Loader
 
---// UI Loader
-local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+-- Load Rayfield (GitHub mirror)
+local Rayfield = loadstring(game:HttpGet("https://raw.githubusercontent.com/shlexware/Rayfield/main/source"))()
 
+-- Main Window
 local Window = Rayfield:CreateWindow({
-   Name = "Keisha Hub | Steal a Brainrot",
-   LoadingTitle = "Keisha Hub",
-   LoadingSubtitle = "by you",
-   ConfigurationSaving = {
-      Enabled = true,
-      FolderName = "KeishaHub",
-      FileName = "BrainrotCFG"
-   },
-   Discord = {
-      Enabled = false,
-      Invite = "",
-      RememberJoins = false
-   },
-   KeySystem = false,
+    Name = "💖 Keisha Hub | Steal a Brainrot",
+    LoadingTitle = "Keisha Hub",
+    LoadingSubtitle = "for Steal a Brainrot",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = "KeishaHub",
+        FileName = "BrainrotCFG"
+    },
+    KeySystem = false
 })
 
---// Notify Function
+-- Notify
 local function KeishaNotify(title, text)
-    Rayfield:Notify({Title = title, Content = text, Duration = 5, Image = 4483362458})
+    Rayfield:Notify({
+        Title = "💎 " .. title,
+        Content = text,
+        Duration = 4,
+        Image = 4483362458
+    })
 end
 
 --// Tabs
-local playerTab   = Window:CreateTab("🏃 Player", 6031280882)
-local combatTab   = Window:CreateTab("⚔️ Combat", 6034287535)
-local farmTab     = Window:CreateTab("🌱 Farm", 6026568198)
-local tpTab       = Window:CreateTab("🌀 Teleport", 6031225816)
-local funTab      = Window:CreateTab("🎉 Fun", 6031302921)
+local playerTab = Window:CreateTab("🏃 Player", 6031280882)
+local combatTab = Window:CreateTab("⚔️ Combat", 6034287535)
+local farmTab   = Window:CreateTab("🌱 Farm", 6026568198)
+local tpTab     = Window:CreateTab("🌀 Teleport", 6031225816)
+local funTab    = Window:CreateTab("🎉 Fun", 6031302921)
 
---// PLAYER FEATURES
+-- PLAYER
 playerTab:CreateSlider({
     Name = "WalkSpeed",
     Range = {16, 100},
@@ -62,13 +63,15 @@ playerTab:CreateToggle({
         game:GetService("UserInputService").JumpRequest:Connect(function()
             if _G.InfJump then
                 local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-                humanoid:ChangeState("Jumping")
+                if humanoid then
+                    humanoid:ChangeState("Jumping")
+                end
             end
         end)
     end
 })
 
---// COMBAT FEATURES
+-- COMBAT
 combatTab:CreateToggle({
     Name = "ESP Players",
     CurrentValue = false,
@@ -109,20 +112,22 @@ combatTab:CreateToggle({
     end
 })
 
---// FARM FEATURES
+-- FARM
 local autofarm = false
 farmTab:CreateToggle({
     Name = "Auto Collect Items",
     CurrentValue = false,
     Callback = function(state)
         autofarm = state
-        spawn(function()
+        task.spawn(function()
             while autofarm do
                 for _, item in pairs(workspace:GetDescendants()) do
                     if item:IsA("TouchTransmitter") and item.Parent then
-                        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, item.Parent, 0)
-                        task.wait()
-                        firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, item.Parent, 1)
+                        pcall(function()
+                            firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, item.Parent, 0)
+                            task.wait()
+                            firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, item.Parent, 1)
+                        end)
                     end
                 end
                 task.wait(1)
@@ -131,7 +136,7 @@ farmTab:CreateToggle({
     end
 })
 
---// TELEPORT FEATURES
+-- TELEPORT
 local playersList = {}
 for _, plr in pairs(game.Players:GetPlayers()) do
     if plr ~= game.Players.LocalPlayer then
@@ -146,10 +151,11 @@ tpTab:CreateDropdown({
     Callback = function(selected)
         local target = game.Players:FindFirstChild(selected)
         if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = target.Character.HumanoidRootPart.CFrame * CFrame.new(2,0,2)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                target.Character.HumanoidRootPart.CFrame * CFrame.new(2,0,2)
             KeishaNotify("Teleport", "Teleported to " .. selected)
         end
-    end,
+    end
 })
 
 tpTab:CreateButton({
@@ -160,7 +166,7 @@ tpTab:CreateButton({
     end
 })
 
---// FUN FEATURES
+-- FUN
 funTab:CreateButton({
     Name = "Fake Notification",
     Callback = function()
@@ -171,14 +177,13 @@ funTab:CreateButton({
 funTab:CreateButton({
     Name = "Disco Mode",
     Callback = function()
-        spawn(function()
+        task.spawn(function()
             while task.wait(0.2) do
                 local char = game.Players.LocalPlayer.Character
-                if char then
-                    for _, p in pairs(char:GetDescendants()) do
-                        if p:IsA("BasePart") then
-                            p.Color = Color3.new(math.random(), math.random(), math.random())
-                        end
+                if not char then break end
+                for _, p in pairs(char:GetDescendants()) do
+                    if p:IsA("BasePart") then
+                        p.Color = Color3.new(math.random(), math.random(), math.random())
                     end
                 end
             end
